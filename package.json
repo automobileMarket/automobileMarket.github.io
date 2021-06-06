@@ -1,0 +1,14 @@
+{
+    "name": "car-tube",
+    "version": "1.0.0",
+    "description": "Car Tube Single Page Application",
+    "main": "index.html",
+    "scripts": {
+        "start": "http-server -a localhost -p 3001 -P http://localhost:3001?"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "http-server": "^0.12.3"
+    }
+}
