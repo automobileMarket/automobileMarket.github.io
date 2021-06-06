@@ -1,7 +1,7 @@
-import { html } from './lib.js';
+import { html } from '../lib.js';
 import { createListing } from '../api/data.js';
 
-const template = (onSubmit) => html`
+const template = (onSubmit, err) => html`
 <section id="create-listing">
     <div class="container">
         <form @submit=${onSubmit} id="create-form">
@@ -26,7 +26,7 @@ const template = (onSubmit) => html`
 
             <p>Car Price</p>
             <input type="number" placeholder="Enter Car Price" name="price">
-
+            ${err ? html`<span class="error">${err}</span>` : ``}
             <hr>
             <input type="submit" class="registerbtn" value="Create Listing">
         </form>
@@ -60,13 +60,13 @@ export async function create(ctx) {
             if(car.brand == '' || car.model == '' || car.description == '' || car.imageUrl == '') {
                 throw new Error ('All fields are required!');
             }
-
+            
             await createListing (car);
             ev.target.reset();
             ctx.page.redirect('/allListings');
             
         } catch (err) {
-            window.alert(err)
+            ctx.render(template(onSubmit, err));
         }
 
     }

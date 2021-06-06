@@ -1,4 +1,4 @@
-import { html } from './lib.js';
+import { html } from '../lib.js';
 import { getListingsByUserId } from '../api/data.js';
 
 
@@ -23,7 +23,7 @@ const listingTemplate = (listing) => html`
             <h3>Price: ${Number(listing.price)} $</h3>
         </div>
         <div class="data-buttons">
-            <a href="/details/${listing._id}" class="button-carDetails">Details</a>
+            <a href="/details/${listing.objectId}" class="button-carDetails">Details</a>
         </div>
     </div>
 </div>`

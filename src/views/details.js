@@ -1,4 +1,4 @@
-import { html } from './lib.js';
+import { html } from '../lib.js';
 import { getListingById, deleteListing } from '../api/data.js'
 
 const template = (listing, onDelete, isOwner) => html`
@@ -20,7 +20,7 @@ const template = (listing, onDelete, isOwner) => html`
 
         ${isOwner ? html`
         <div class="listings-buttons">
-            <a href="/edit/${listing._id}" class="button-list">Edit</a>
+            <a href="/edit/${listing.objectId}" class="button-list">Edit</a>
             <a @click=${onDelete} href="javascript:void(0)" class="button-list">Delete</a>
         </div>` : ''}
     </div>
@@ -31,7 +31,8 @@ export async function details(ctx) {
     const userId = sessionStorage.getItem('userId');
     const listingId = ctx.params.id;
     const listing = await getListingById(listingId)
-    const isOwner = userId == listing._ownerId
+    
+    const isOwner = userId == listing.owner.objectId
 
     ctx.render(template(listing, onDelete, isOwner));
 

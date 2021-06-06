@@ -24,3 +24,18 @@ footer {
     position: relative;
     padding-bottom: 64px;
 }
+
+span.error {
+    background: #EF5542;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: normal;
+    position: absolute;
+    float: right;
+    margin-top: -16px;
+    overflow: hidden;
+    display: block;
+}

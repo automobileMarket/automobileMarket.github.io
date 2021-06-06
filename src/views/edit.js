@@ -1,8 +1,8 @@
-import { html } from './lib.js';
+import { html } from '../lib.js';
 import { editListing, getListingById } from '../api/data.js';
 
 
-const template = (listing, onSubmit) => html`
+const template = (listing, onSubmit, err) => html`
 <section id="edit-listing">
     <div class="container">
 
@@ -28,6 +28,7 @@ const template = (listing, onSubmit) => html`
 
             <p>Car Price</p>
             <input type="number" placeholder="Enter Car Price" name="price" .value=${Number(listing.price)}>
+            ${err ? html`<span class="error">${err}</span>` : ``}
 
             <hr>
             <input type="submit" class="registerbtn" value="Edit Listing">
@@ -68,7 +69,8 @@ export async function edit(ctx) {
             ctx.page.redirect(`/details/${listingId}`)
 
         } catch (err) {
-            window.alert(err)
+            ctx.render(template(listing, onSubmit, err));
+
         }
 
 

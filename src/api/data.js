@@ -1,41 +1,59 @@
 import * as api from './api.js';
 
-const host = 'http://localhost:3030';
+const host = 'https://parseapi.back4app.com';
 api.settings.host = host;
 
 export const login = api.login;
 export const register = api.register;
 export const logout = api.logout;
 
-
-export async function getAllListings(page = 1) {
-    return await api.get(host + `/data/cars?sortBy=_createdOn%20desc&offset=${(page-1)*2}&pageSize=2`);
+function createPointer(name, id) {
+    return {
+        __type: 'Pointer',
+        className: name,
+        objectId: id
+    }
 }
 
-export async function getCollectionSize() {
-    return await api.get(host + '/data/cars?count');
+function addOwner(object) {
+    const userId = sessionStorage.getItem('userId');
+    const result = Object.assign({}, object);
+    result.owner = createPointer('_User', userId);
+    return result;
+}
+
+export async function getAllListings() {
+    return (await api.get(host + `/classes/Car`)).results;
 }
 
 export async function getListingById (id) {
-    return await api.get(host + '/data/cars/' + id);
+    return await api.get(host + `/classes/Car/${id}?include=owner`);
 }
 
 export async function getListingsByUserId (userId) {
-    return await api.get(host + `/data/cars?where=_ownerId%3D%22${userId}%22&sortBy=_createdOn%20desc`);
+    const query = JSON.stringify({
+        owner: createPointer('_User', userId)
+    });
+    const response = await api.get(host + '/classes/Car?where=' + encodeURIComponent(query));
+    return response.results;
 }
 
 export async function searchByYear (year) {
-    return await api.get(host + `/data/cars?where=year%3D${year}`);
+    return (await api.get(host + `/classes/Car?where={"year": ${year}}`)).results;
 }
 
 export async function createListing (car) {
-    return await api.post(host + '/data/cars', car);
+    
+    const body = addOwner(car);
+    let result = await api.post(host + '/classes/Car', body);
+    return result
 }
 
 export async function editListing (id, car) {
-    return await api.put(host + '/data/cars/' + id, car);
+    let result = await api.put(host + '/classes/Car/' + id, car);
+    return result;
 }
 
 export async function deleteListing (id) {
-    return await api.del(host + '/data/cars/' + id)
+    return await api.del(host + '/classes/Car/' + id)
 }
